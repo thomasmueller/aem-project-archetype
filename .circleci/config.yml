@@ -78,14 +78,17 @@ jobs:
       - checkout
       - run:
           name: Deploy
+          - add_ssh_keys:
+              fingerprints:
+              - "14:ab:8b:b6:ae:5b:96:38:c4:1d:7f:e6:5a:38:68:8c"
           command: |
             # Grab tag that will be deployed
-            DEPLOY_TAG=`echo "$CIRCLE_TAG" | sed -e "s/@deploy-//g"`
+            DEPLOY_TARGET=`echo "$CIRCLE_TAG" | sed -e "s/@deploy-//g"`
 
-            if [ `git branch --list $DEPLOY_TAG` ]
+            if [ `git tag --list $DEPLOY_TARGET` ] || [ `git branch --list $DEPLOY_TARGET` ]
             then
                 # Checkout tag
-                git checkout $DEPLOY_TAG
+                git checkout $DEPLOY_TARGET
 
                 # Prepare GPG key
                 echo echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
@@ -99,7 +102,7 @@ jobs:
                 # Remove GPG ke
                 echo rm -rf /home/circleci/.gnupg
             else
-                echo "The specified tag ($DEPLOY_TAG) does not exist"
+                echo "The specified tag ($DEPLOY_TARGET) does not exist"
 
                 # Remove deploy tag
                 git push --delete origin $CIRCLE_TAG
