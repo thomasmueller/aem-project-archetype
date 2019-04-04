@@ -86,7 +86,7 @@ jobs:
             echo mvn deploy -B -s .circleci/settings.xml
 
             # Remove deploy tag
-            echo git push --delete origin $CIRCLE_TAG
+            git push --delete origin $CIRCLE_TAG
 
             # Remove GPG ke
             echo rm -rf /home/circleci/.gnupg
@@ -95,8 +95,8 @@ workflows:
   version: 2
   build:
     jobs:
-      - build-java-8
-      - build-java-11
+#      - build-java-8
+#      - build-java-11
       - deploy_snapshot:
           requires:
           - build-java-11
