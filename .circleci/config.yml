@@ -76,11 +76,11 @@ jobs:
 
     steps:
       - checkout
+        - add_ssh_keys:
+            fingerprints:
+            - "14:ab:8b:b6:ae:5b:96:38:c4:1d:7f:e6:5a:38:68:8c"
       - run:
           name: Deploy
-          - add_ssh_keys:
-              fingerprints:
-              - "14:ab:8b:b6:ae:5b:96:38:c4:1d:7f:e6:5a:38:68:8c"
           command: |
             # Grab tag that will be deployed
             DEPLOY_TARGET=`echo "$CIRCLE_TAG" | sed -e "s/@deploy-//g"`
