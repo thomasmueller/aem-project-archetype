@@ -79,18 +79,29 @@ jobs:
       - run:
           name: Deploy
           command: |
-            # Prepare GPG key
-            echo echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
+            # Grab tag that will be deployed
+            DEPLOY_TAG = echo "$CIRCLE_TAG" | sed -e "s/@deploy-//g"
 
-            # Deploy
-            echo mvn deploy -B -s .circleci/settings.xml
+            if [ `git branch --list $DEPLOY_TAG` ]
+            then
+                # Checkout tag
+                git checkout $DEPLOY_TAG
 
-            # Remove deploy tag
-            git push --delete origin $CIRCLE_TAG
+                # Prepare GPG key
+                echo echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
 
-            # Remove GPG ke
-            echo rm -rf /home/circleci/.gnupg
+                # Deploy
+                echo mvn deploy -B -s .circleci/settings.xml
 
+                # Remove deploy tag
+                git push --delete origin $CIRCLE_TAG
+
+                # Remove GPG ke
+                echo rm -rf /home/circleci/.gnupg
+            else
+                echo "The specified tag ($DEPLOY_TAG) does not exist"
+                exit 1
+            fi
 workflows:
   version: 2
   build:
