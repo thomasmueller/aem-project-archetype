@@ -108,7 +108,7 @@ workflows:
     jobs:
 #      - build-java-8
 #      - build-java-11
-      - deploy_snapshot:
+      - deploy:
 #          requires:
 #          - build-java-11
           filters:
