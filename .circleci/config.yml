@@ -87,26 +87,25 @@ jobs:
 
             if [ `git tag --list $DEPLOY_TARGET` ] || [ `git branch --list $DEPLOY_TARGET` ]
             then
-                # Checkout tag
+                echo "== Checkout $DEPLOY_TARGET =="
                 git checkout $DEPLOY_TARGET
 
-                # Prepare GPG key
-                echo echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
+                echo "== Prepare GPG key =="
+                echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
 
-                # Deploy
-                echo mvn deploy -B -s .circleci/settings.xml
+                echo "== Deploy =="
+                mvn deploy -B -s .circleci/settings.xml
 
-                # Remove deploy tag
+                echo "== Remove deploy tag =="
                 git push --delete origin $CIRCLE_TAG
 
-                # Remove GPG ke
-                echo rm -rf /home/circleci/.gnupg
+                echo "== Remove GPG key =="
+                rm -rf /home/circleci/.gnupg
             else
-                echo "The specified tag ($DEPLOY_TARGET) does not exist"
-
-                # Remove deploy tag
+                echo "== Remove deploy tag =="
                 git push --delete origin $CIRCLE_TAG
 
+                echo "The specified tag ($DEPLOY_TARGET) does not exist"
                 exit 1
             fi
 workflows:
