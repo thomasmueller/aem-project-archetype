@@ -100,6 +100,10 @@ jobs:
                 echo rm -rf /home/circleci/.gnupg
             else
                 echo "The specified tag ($DEPLOY_TAG) does not exist"
+
+                # Remove deploy tag
+                git push --delete origin $CIRCLE_TAG
+
                 exit 1
             fi
 workflows:
