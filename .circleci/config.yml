@@ -80,7 +80,7 @@ jobs:
           name: Deploy
           command: |
             # Grab tag that will be deployed
-            DEPLOY_TAG = echo "$CIRCLE_TAG" | sed -e "s/@deploy-//g"
+            DEPLOY_TAG=`echo "$CIRCLE_TAG" | sed -e "s/@deploy-//g"`
 
             if [ `git branch --list $DEPLOY_TAG` ]
             then
