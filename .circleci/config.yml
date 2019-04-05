@@ -98,7 +98,6 @@ jobs:
                   mvn deploy -B -s .circleci/settings.xml
               else
                   echo "The specified tag ($DEPLOY_TARGET) does not exist"
-                  return 1
               fi
             } || {
                 echo "== Remove GPG key =="
