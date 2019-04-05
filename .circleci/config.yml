@@ -78,34 +78,32 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-          - "14:ab:8b:b6:ae:5b:96:38:c4:1d:7f:e6:5a:38:68:8c"
+          - "e4:39:58:e8:8c:ee:86:0d:33:b4:bc:22:02:55:96:87"
       - run:
           name: Deploy
           command: |
-            {
-              # Grab tag that will be deployed
-              DEPLOY_TARGET=`echo "$CIRCLE_TAG" | sed -e "s/@deploy-//g"`
+            echo "== Remove deploy tag =="
+            git push --delete origin $CIRCLE_TAG
 
-              if [ `git tag --list $DEPLOY_TARGET` ] || [ `git branch --list $DEPLOY_TARGET` ]
-              then
-                  echo "== Checkout $DEPLOY_TARGET =="
-                  git checkout $DEPLOY_TARGET
+            # Grab tag that will be deployed
+            DEPLOY_TARGET=`echo "$CIRCLE_TAG" | sed -e "s/@deploy-//g"`
 
-                  echo "== Prepare GPG key =="
-                  echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
+            if [ "`git tag --list $DEPLOY_TARGET`" ] || [ "`git branch --list $DEPLOY_TARGET`" ]
+            then
+                echo "== Checkout $DEPLOY_TARGET =="
+                git checkout $DEPLOY_TARGET
 
-                  echo "== Deploy =="
-                  mvn deploy -B -s .circleci/settings.xml
-              else
-                  echo "The specified tag ($DEPLOY_TARGET) does not exist"
-              fi
-            } || {
+                echo "== Prepare GPG key =="
+                echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
+
+                echo "== Deploy =="
+                mvn deploy -B -s .circleci/settings.xml
+
                 echo "== Remove GPG key =="
                 rm -rf /home/circleci/.gnupg
-
-                echo "== Remove deploy tag =="
-                git push --delete origin $CIRCLE_TAG
-            }
+            else
+                echo "The specified tag ($DEPLOY_TARGET) does not exist"
+            fi
 workflows:
   version: 2
   build:
