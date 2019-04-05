@@ -95,7 +95,7 @@ jobs:
             echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
 
             echo "== Deploy =="
-            mvn deploy -B -p release -s .circleci/settings.xml
+            mvn deploy -B -Prelease -s .circleci/settings.xml
 
             echo "== Remove GPG key =="
             rm -rf /home/circleci/.gnupg
