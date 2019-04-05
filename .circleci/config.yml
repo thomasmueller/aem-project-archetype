@@ -88,22 +88,17 @@ jobs:
             # Grab tag that will be deployed
             DEPLOY_TARGET=`echo "$CIRCLE_TAG" | sed -e "s/@deploy-//g"`
 
-            if [ "`git tag --list $DEPLOY_TARGET`" ] || [ "`git branch --list $DEPLOY_TARGET`" ]
-            then
-                echo "== Checkout $DEPLOY_TARGET =="
-                git checkout $DEPLOY_TARGET
+            echo "== Checkout $DEPLOY_TARGET =="
+            git checkout $DEPLOY_TARGET
 
-                echo "== Prepare GPG key =="
-                echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
+            echo "== Prepare GPG key =="
+            echo $GPG_PRIVATE_KEY | base64 --decode | gpg --batch --import
 
-                echo "== Deploy =="
-                mvn deploy -B -s .circleci/settings.xml
+            echo "== Deploy =="
+            mvn deploy -B -p release -s .circleci/settings.xml
 
-                echo "== Remove GPG key =="
-                rm -rf /home/circleci/.gnupg
-            else
-                echo "The specified tag ($DEPLOY_TARGET) does not exist"
-            fi
+            echo "== Remove GPG key =="
+            rm -rf /home/circleci/.gnupg
 workflows:
   version: 2
   build:
