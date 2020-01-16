@@ -64,31 +64,11 @@
                     </repositoryStructurePackages>
                     <embeddeds>
                         <embedded>
-                            <groupId>com.adobe.cq</groupId>
-                            <artifactId>core.wcm.components.core</artifactId>
-                            <target>/apps/${appsFolderName}/install</target>
-                        </embedded>
-                        <embedded>
                             <groupId>${groupId}</groupId>
                             <artifactId>${rootArtifactId}.core</artifactId>
                             <target>/apps/${appsFolderName}/install</target>
                         </embedded>
-#if ( $isSpaProject )
-                        <embedded>
-                            <groupId>com.adobe.aem</groupId>
-                            <artifactId>spa.project.core.core</artifactId>
-                            <target>/apps/${appsFolderName}/install</target>
-                        </embedded>
-#end
                     </embeddeds>
-                    <subPackages>
-#if ( $isSpaProject )
-                        <subPackage>
-                            <groupId>com.adobe.aem</groupId>
-                            <artifactId>spa.project.core.all</artifactId>
-                        </subPackage>
-#end
-                    </subPackages>
                     <dependencies>
                         <dependency>
                             <groupId>com.adobe.cq</groupId>
@@ -98,6 +78,12 @@
                             <groupId>com.adobe.cq</groupId>
                             <artifactId>core.wcm.components.config</artifactId>
                         </dependency>
+#if ( $isSpaProject )
+                        <dependency>
+                            <groupId>com.adobe.aem</groupId>
+                            <artifactId>spa.project.core.all</artifactId>
+                        </dependency>
+#end
                     </dependencies>
                 </configuration>
             </plugin>
@@ -110,7 +96,6 @@
                     <failOnError>true</failOnError>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>htl-maven-plugin</artifactId>
