@@ -49,6 +49,7 @@
                         <filter><root>/apps/settings</root></filter>
 
                     </filters>
+                    <allowIndexDefinitions>true</allowIndexDefinitions>
                 </configuration>
             </plugin>
         </plugins>
