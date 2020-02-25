@@ -99,6 +99,7 @@
                             <artifactId>core.wcm.components.config</artifactId>
                         </dependency>
                     </dependencies>
+                    <allowIndexDefinitions>true</allowIndexDefinitions>
                 </configuration>
             </plugin>
             <plugin>
